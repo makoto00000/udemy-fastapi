@@ -1,5 +1,11 @@
 from typing import Optional
 from pydantic import BaseModel, Field
+from enum import Enum
+
+
+class ItemStatus(Enum):
+    ON_SALE = "ON_SALE"
+    SOLD_OUT = "SOLD_OUT"
 
 
 class ItemCreate(BaseModel):
@@ -7,3 +13,11 @@ class ItemCreate(BaseModel):
     price: int = Field(gt=0, examples=[10000])
     description: Optional[str] = Field(default=None, examples=["美品です"])
 # defaultは第一引数なら省略可
+
+
+class ItemUpdate(BaseModel):
+    name: Optional[str] = Field(
+        None, min_length=2, max_length=20, examples=["PC"])
+    price: Optional[int] = Field(None, gt=0, examples=[10000])
+    description: Optional[str] = Field(None, examples=["美品です"])
+    status: Optional[ItemStatus] = Field(None, examples=[ItemStatus.SOLD_OUT])
