@@ -30,6 +30,6 @@ async def login(db: DbDependency, form_data: FormDependency):
             status_code=401, detail="Incorrect username or password")
 
     token = auth_cruds.create_access_token(
-        user.username, user.id, timedelta(minutes=20))
+        user.username, user.id, timedelta(minutes=200))
 
     return {"access_token": token, "token_type": "bearer"}
