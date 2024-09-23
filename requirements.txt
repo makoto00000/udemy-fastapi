@@ -7,3 +7,5 @@ python-multipart
 python-jose[cryptography]
 pytest
 httpx
+python-dotenv  # 環境変数を設定する
+pydantic-settings  # 設定ファイルに対してバリデーションを行う
