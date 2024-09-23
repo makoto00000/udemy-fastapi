@@ -5,7 +5,7 @@ import os
 from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
+from jose import jwt, JWTError  # type: ignore
 from sqlalchemy.orm import Session
 from schemas import UserCreate, DecodedToken
 from models import User
