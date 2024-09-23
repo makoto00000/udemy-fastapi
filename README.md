@@ -43,3 +43,17 @@ alembic revision --autogenerate -m "Create items table"
 ```shell
 alembic upgrade head
 ```
+
+## CORS設定の確認コマンド
+
+### 失敗するコマンド
+
+```shell
+curl -X OPTIONS -H "Origin: http://localhost:3001" -H "Access-Control-Request-Method: GET" http://localhost:8080/items -i
+```
+
+### 成功するコマンド
+
+```shell
+curl -X OPTIONS -H "Origin: http://localhost:3000" -H "Access-Control-Request-Method: GET" http://localhost:8080/items -i
+```
