@@ -2,12 +2,14 @@ from typing import Annotated
 from fastapi import APIRouter, Path, Query, HTTPException, Depends
 from sqlalchemy.orm import Session
 from starlette import status
-from cruds import item as item_cruds
-from schemas import ItemCreate, ItemUpdate, ItemResponse
+from cruds import item as item_cruds, auth as auth_cruds
+from schemas import ItemCreate, ItemUpdate, ItemResponse, DecodedToken
 from database import get_db
 
 
 DbDependency = Annotated[Session, Depends(get_db)]
+
+UserDependency = Annotated[DecodedToken, Depends(auth_cruds.get_current_user)]
 
 router = APIRouter(prefix="/items", tags=["Items"])
 
@@ -34,10 +36,11 @@ async def find_by_name(db: DbDependency,
     return item_cruds.find_by_name(db, name)
 
 
-@router.post("", response_model=ItemResponse,
-             status_code=status.HTTP_201_CREATED)
-async def create(db: DbDependency, item_create: ItemCreate):
-    return item_cruds.create(db, item_create)
+@router.post(
+    "", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
+async def create(
+        db: DbDependency, user: UserDependency, item_create: ItemCreate):
+    return item_cruds.create(db, item_create, user.user_id)
 
 
 @router.put("/{id}", response_model=ItemResponse,

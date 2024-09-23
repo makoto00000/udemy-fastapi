@@ -34,7 +34,6 @@ def create_user(db: Session, user_create: UserCreate):
 
 def authenticate_user(db: Session, username: str, password: str):
     user = db.query(User).filter(User.username == username).first()
-    print(user)
     if not user:
         return None
 
@@ -54,11 +53,11 @@ def create_access_token(username: str, user_id: int, expires_delta: timedelta):
 
 
 def get_current_user(token: Annotated[str, Depends(oauth2_schema)]):
+    # tokenの中身 {"access_token": token, "token_type": "bearer"}
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get("sub")
         user_id = payload.get("id")
-        print(payload)
         if username is None or user_id is None:
             return None
         return DecodedToken(username=username, user_id=user_id)

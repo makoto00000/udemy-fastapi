@@ -15,8 +15,8 @@ DbDependency = Annotated[Session, Depends(get_db)]
 FormDependency = Annotated[OAuth2PasswordRequestForm, Depends()]
 
 
-@router.post(
-  "/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/signup",
+             response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(db: DbDependency, create_user: UserCreate):
     return auth_cruds.create_user(db, create_user)
 
@@ -32,4 +32,6 @@ async def login(db: DbDependency, form_data: FormDependency):
     token = auth_cruds.create_access_token(
         user.username, user.id, timedelta(minutes=200))
 
+    # oauth2_schema = OAuth2PasswordBearer(tokenUrl="/auth/login")のために
+    # 以下の形式で返却する必要がある。
     return {"access_token": token, "token_type": "bearer"}
